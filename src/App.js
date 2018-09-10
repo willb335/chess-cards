@@ -109,7 +109,7 @@ function Github() {
         rel="noopener noreferrer"
         id="github-link"
         target="_blank"
-        href="https://github.com/willb335"
+        href="https://github.com/willb335/chess-cards"
       >
         <svg height="65" width="65" viewBox="0 0 16 16" aria-hidden="true">
           <path
