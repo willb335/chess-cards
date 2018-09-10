@@ -13,11 +13,11 @@ class App extends React.Component {
     showCards: false,
     cards: [
       { name: 'DanielRensch', game: 'chess_blitz' },
-      { name: 'magnus335', game: 'chess_blitz' },
-      { name: 'Hikaru', game: 'chess_blitz' },
-      { name: 'Coltinator5000', game: 'chess_blitz' },
       { name: 'Ginger_GM', game: 'chess_blitz' },
-      { name: 'Bookfair', game: 'chess_blitz' }
+      { name: 'Hikaru', game: 'chess_blitz' },
+      { name: 'Bookfair', game: 'chess_blitz' },
+      { name: 'magnus335', game: 'chess_blitz' },
+      { name: 'Coltinator5000', game: 'chess_blitz' }
     ],
     loadedCards: [],
     animationSettled: false

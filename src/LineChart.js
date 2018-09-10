@@ -74,7 +74,7 @@ class LineChart extends React.Component {
           xType="ordinal"
           yType="linear"
           width={150}
-          height={150}
+          height={130}
           stroke="white"
           yDomain={[1000, 3200]}
         >

@@ -92,12 +92,12 @@ class ChessCard extends React.Component {
 
     return animationSettled ? (
       <Spring
-        config={{ tension: 140, friction: 35 }}
+        // config={config.gentle}
         to={{ rotateY: !front ? 180 : 360, x: !front ? 180 : 0 }}
       >
         {styles => (
           <div style={interpolateStyles(styles)}>
-            {front && (
+            {styles.rotateY >= 270 && (
               <Front
                 flipCard={this.flipCard}
                 front={front}
@@ -110,7 +110,7 @@ class ChessCard extends React.Component {
                 size={size}
               />
             )}
-            {!front && (
+            {styles.rotateY < 270 && (
               <Back
                 flipCard={this.flipCard}
                 front={front}
@@ -202,9 +202,11 @@ function Front({
           style={playerStatsStyle(getGradient)(blitzRating)}
           size={size}
         >
-          <StatsCategory size={size}>{getGame(game)}</StatsCategory>
+          <StatsCategory size={size} left>
+            {getGame(game)}
+          </StatsCategory>
           <StatsCategory size={size}>{blitzRating}</StatsCategory>
-          <StatsCategory size={size}>{`+ ${plus}`}</StatsCategory>
+          <StatsCategory size={size} right>{`+${plus}`}</StatsCategory>
         </PlayerStats>
       </CardBody>
     </StyledPaperFront>
@@ -230,7 +232,7 @@ function Back({ flipCard, front, blitzRating, avatar, username, size, plus }) {
       zindex={front ? 0 : 2}
       size={size}
     >
-      <Header back gradient={getGradient(blitzRating)} size={size}>
+      <Header gradient={getGradient(blitzRating)} size={size}>
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
       <LineChart blitzRating={blitzRating} plus={plus} />
@@ -337,8 +339,6 @@ export const Header = styled.header`
   background: ${props => props.gradient};
   border-radius: 4px 4px 0px 0px;
   transform: scale(0.95);
-  transform: ${props =>
-    props.back ? `scale(0.95) rotateY(180deg)` : `scale(0.95)`};
 `;
 
 export const Avatar = styled.img`
@@ -394,8 +394,11 @@ const PlayerStats = styled.div`
 `;
 
 const StatsCategory = styled.div`
-  padding: 0.25rem 0.25rem;
-  padding: ${props => `${props.size * 0.25}rem ${props.size * 0.25}rem`};
+  padding: ${props =>
+    `${props.size * 0.7}rem ${props.size * 0.7}rem ${props.size *
+      0.7}rem ${props.size * 0.7}rem`};
   text-align: center;
-  font-size: ${props => `${props.size * 1.2}rem`};
+  font-size: ${props => `${props.size * 1.5}rem`};
+  ${'' /* margin-left: ${props => (props.left ? `${0.5 * props.size}rem` : 0)};
+  margin-right: ${props => (props.right ? `${0.5 * props.size}rem` : 0)}; */};
 `;
