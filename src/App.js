@@ -4,7 +4,7 @@ import { Spring, config } from 'react-spring';
 import styled from 'styled-components';
 
 import ChessCard, { StyledPaperFront, Header, Avatar } from './ChessCard';
-import chessComAvatar from './chesscom.png';
+import chessComAvatar from './images/chesscom.png';
 
 const SIZE = 1;
 
