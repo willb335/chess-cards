@@ -2,6 +2,7 @@ import React from 'react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Spring, config } from 'react-spring';
 import styled from 'styled-components';
+import Proptypes from 'prop-types';
 
 import ChessCard, { StyledPaperFront, Header, Avatar } from './ChessCard';
 import chessComAvatar from './images/chesscom.png';
@@ -9,6 +10,8 @@ import chessComAvatar from './images/chesscom.png';
 const SIZE = 1;
 
 class App extends React.Component {
+  static propTypes = { fakeFetch: Proptypes.func };
+  static defaultProps = { fakeFetch: () => {} };
   state = {
     showCards: false,
     cards: [
@@ -71,6 +74,7 @@ class App extends React.Component {
                       animationSettled={animationSettled}
                       showCards={showCards}
                       size={SIZE}
+                      fakeFetch={this.props.fakeFetch}
                     />
                   </div>
                 )}
@@ -87,10 +91,10 @@ class App extends React.Component {
             >
               <StyledAvatar src={chessComAvatar} alt="chess.com" size={1} />
             </Header>
-            <div style={{ margin: '2rem 0 1rem 0' }}>Who&apos;s Hot?</div>
-            <span aria-label="Who's Hot" role="img">
+            <div style={{ margin: '4rem 0 1rem 0' }}>Who&apos;s Hot?</div>
+            {/* <span aria-label="Who's Hot" role="img">
               🔥🔥🔥🔥🔥🔥
-            </span>
+            </span> */}
           </Button>
           <Github />
         </Container>

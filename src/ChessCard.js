@@ -6,6 +6,7 @@ import Proptypes from 'prop-types';
 
 import { getLevel, getGradient, getLevelColor } from './ratingCategories';
 import LineChart from './LineChart';
+import { getPlayer, getRating } from './api/chess_com';
 
 class ChessCard extends React.Component {
   static propTypes = {
@@ -14,7 +15,8 @@ class ChessCard extends React.Component {
     loadCard: Proptypes.func,
     game: Proptypes.string,
     animationSettled: Proptypes.bool,
-    size: Proptypes.number
+    size: Proptypes.number,
+    fakeFetch: Proptypes.func
   };
 
   static defaultProps = { size: 1 };
@@ -22,7 +24,7 @@ class ChessCard extends React.Component {
   state = {
     avatar: '',
     playerName: '',
-    blitzRating: 0,
+    blitzRating: 1000,
     title: '',
     plus: 0,
     front: true
@@ -50,30 +52,33 @@ class ChessCard extends React.Component {
   /**
    * The two fetch requests called on mount
    * @returns {void} calls setState after recieving json data from api.chess.com
+   * or after recieving mock data from this.props.fakeFetch
    */
   fetchCardInfo = () => {
-    fetch(`https://api.chess.com/pub/player/${this.props.name}`)
-      .then(response => response.json())
-      .then(json =>
-        this.setState(
-          {
-            avatar: json.avatar,
-            username: json.username,
-            location: json.location,
-            title: json.title ? json.title.toLowerCase() : '',
-            plus: getRandomInt(100, 250)
-          },
-          () => this.props.loadCard({ [this.state.username]: true })
-        )
-      );
+    // setup for mocking fetch
+    const isFakeFetch = this.props.fakeFetch() !== undefined;
+    const request = isFakeFetch ? this.props.fakeFetch : fetch;
 
-    fetch(`https://api.chess.com/pub/player/${this.props.name}/stats`)
-      .then(response => response.json())
-      .then(json =>
-        this.setState({
-          blitzRating: parseInt(json[this.props.game].last.rating, 10)
-        })
-      );
+    getPlayer(request, this.props.name).then(json =>
+      this.setState(
+        {
+          avatar: json.avatar,
+          username: json.username,
+          location: json.location,
+          title: json.title ? json.title.toLowerCase() : '',
+          plus: getRandomInt(100, 250)
+        },
+        () => this.props.loadCard({ [this.state.username]: true })
+      )
+    );
+
+    getRating(request, this.props.name).then(json =>
+      this.setState({
+        blitzRating: isFakeFetch
+          ? json.blitzRating
+          : parseInt(json[this.props.game].last.rating, 10)
+      })
+    );
   };
 
   /**
@@ -92,7 +97,7 @@ class ChessCard extends React.Component {
 
     return animationSettled ? (
       <Spring
-        // config={config.gentle}
+        config={{ tension: 125, friction: 14 }}
         to={{ rotateY: !front ? 180 : 360, x: !front ? 180 : 0 }}
       >
         {styles => (
@@ -267,10 +272,7 @@ const playerStatsStyle = gradient => rating => ({
  * @returns {Object} The current styles for card rotation
  */
 const interpolateStyles = styles => ({
-  ...styles,
-  ...{
-    transform: `translateX(${-styles.x}px) rotateY(${styles.rotateY}deg)`
-  }
+  transform: `translateX(${styles.x * -1}px) rotateY(${styles.rotateY}deg)`
 });
 
 /**

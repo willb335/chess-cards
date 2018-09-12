@@ -1,24 +1,60 @@
 import React from 'react';
 import App from '../App';
-import { render, cleanup } from 'react-testing-library';
+import { render, cleanup, waitForElement } from 'react-testing-library';
 import 'jest-dom/extend-expect';
-// import mockFetch from '../__mocks__/fetch';
 
-const mockFetch = fetch;
-
-const cards = [
-  { name: 'DanielRensch', game: 'chess_blitz' },
-  { name: 'magnus335', game: 'chess_blitz' },
-  { name: 'Hikaru', game: 'chess_blitz' },
-  { name: 'Coltinator5000', game: 'chess_blitz' },
-  { name: 'Ginger_GM', game: 'chess_blitz' },
-  { name: 'Bookfair', game: 'chess_blitz' }
-];
+import { getPlayer, getRating } from '../api/chess_com';
 
 afterEach(cleanup);
 
-it('calls fetch', async () => {
-  mockFetch.mockImplementationOnce(() => Promise.resolve(cards));
-  const data = await fetch('url');
-  console.log(data);
+describe('mocking api', () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
+  it('fake fetches chess.com and returns data to me', () => {
+    fetch.mockResponse(JSON.stringify({ data: '12345' }));
+
+    getPlayer(fetch, 'magnus335').then(res => {
+      expect(res.data).toEqual('12345');
+    });
+
+    getRating(fetch, 'magnus335').then(res => {
+      expect(res.data).toEqual('12345');
+    });
+
+    //assert on the times called and arguments given to fetch
+    expect(fetch.mock.calls.length).toEqual(2);
+    expect(fetch.mock.calls[0][0]).toEqual(
+      'https://api.chess.com/pub/player/magnus335'
+    );
+    expect(fetch.mock.calls[1][0]).toEqual(
+      'https://api.chess.com/pub/player/magnus335/stats'
+    );
+  });
+
+  it('renders app and gives cards mock data from fake fetch', async () => {
+    fetch.mockResponse(
+      JSON.stringify({
+        avatar: 'avatar',
+        username: 'realMagnusCarlsen',
+        blitzRating: 1500,
+        title: 'gm',
+        plus: 100
+      })
+    );
+
+    const { getByText } = render(<App fakeFetch={fetch} />);
+    const username = await waitForElement(() =>
+      getByText('realMagnusCarlsen', { exact: false })
+    );
+    const rating = await waitForElement(() =>
+      getByText('1500', { exact: false })
+    );
+    const title = await waitForElement(() => getByText('GM', { exact: false }));
+
+    expect(username).toHaveTextContent('realMagnusCarlsen');
+    expect(rating).toHaveTextContent('1500');
+    expect(title).toHaveTextContent('gm');
+  });
 });
