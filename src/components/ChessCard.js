@@ -4,9 +4,14 @@ import styled from 'styled-components';
 import { Spring } from 'react-spring';
 import Proptypes from 'prop-types';
 
-import { getLevel, getGradient, getLevelColor } from './ratingCategories';
+import {
+  getLevel,
+  getGradient,
+  getLevelColor,
+  getShadowColor
+} from '../ratingCategories';
 import LineChart from './LineChart';
-import { getPlayer, getRating } from './api/chess_com';
+import { getPlayer, getRating } from '../api/chess_com';
 
 class ChessCard extends React.Component {
   static propTypes = {
@@ -194,7 +199,11 @@ function Front({
       size={size}
       data-testid={`front-settled`}
     >
-      <Header gradient={getGradient(blitzRating)} size={size}>
+      <Header
+        gradient={getGradient(blitzRating)}
+        size={size}
+        shadow={getShadowColor(blitzRating)}
+      >
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
       <CardBody size={size}>
@@ -206,6 +215,7 @@ function Front({
         <PlayerStats
           style={playerStatsStyle(getGradient)(blitzRating)}
           size={size}
+          shadow={getShadowColor(blitzRating)}
         >
           <StatsCategory size={size} left>
             {getGame(game)}
@@ -237,7 +247,11 @@ function Back({ flipCard, front, blitzRating, avatar, username, size, plus }) {
       zindex={front ? 0 : 2}
       size={size}
     >
-      <Header gradient={getGradient(blitzRating)} size={size}>
+      <Header
+        gradient={getGradient(blitzRating)}
+        size={size}
+        shadow={getShadowColor(blitzRating)}
+      >
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
       <LineChart blitzRating={blitzRating} plus={plus} />
@@ -304,13 +318,12 @@ export const StyledPaperFront = styled(Paper)`
   flex-direction: column;
   border-radius: 10px 10px 10px 10px;
   box-shadow: 0;
-  transform: scale(0.95);
+  transform: scale(0.9);
   transition: box-shadow 0.5s, transform 0.5s;
   margin: ${props => `${props.size * 1.5}rem`};
   top: 0;
   right: 0;
   z-index: ${props => props.zindex};
-  backface-visibility: hidden;
   cursor: pointer !important;
 
   &:hover {
@@ -321,7 +334,7 @@ export const StyledPaperFront = styled(Paper)`
 
 const StyledPaperBack = styled(StyledPaperFront)`
   z-index: ${props => props.zindex};
-  transform: scale(0.95) rotateY(3.142rad);
+  transform: scale(0.9) rotateY(3.142rad);
   transition: box-shadow 0.5s, transform 0.5s;
   backface-visibility: visible;
 
@@ -340,7 +353,8 @@ export const Header = styled.header`
   position: relative;
   background: ${props => props.gradient};
   border-radius: 4px 4px 0px 0px;
-  transform: scale(0.95);
+  transform: scale(0.9);
+  box-shadow: ${props => `0rem 1rem 1.4rem ${props.shadow}`};
 `;
 
 export const Avatar = styled.img`
@@ -348,10 +362,10 @@ export const Avatar = styled.img`
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: ${props => `${props.size * 2}px solid white`};
+  border: ${props => `${props.size * 4}px solid white`};
   border-radius: 50%;
-  width: ${props => `${props.size * 7.33}rem`};
-  height: ${props => `${props.size * 7.33}rem`};
+  width: ${props => `${props.size * 9}rem`};
+  height: ${props => `${props.size * 9}rem`};
   margin: 5;
 `;
 
@@ -362,7 +376,7 @@ const CardBody = styled.div`
   flex-direction: column;
   width: ${props => `${props.size * 15}rem`};
   height: auto;
-  transform: scale(0.95);
+  transform: scale(0.9);
   transition: transform 0.5s;
 
   ${StyledPaperFront}:hover {
@@ -371,10 +385,10 @@ const CardBody = styled.div`
 `;
 
 const PlayerName = styled.div`
-  font-size: ${props => `${props.size * 1.73}rem`};
+  font-size: ${props => `${props.size * 1.85}rem`};
   color: black;
   font-weight: 900;
-  margin-bottom: ${props => `${props.size * 0.66}rem`};
+  margin-bottom: ${props => `${props.size * 0.15}rem`};
 `;
 
 const PlayerLevel = styled.div`
@@ -383,6 +397,7 @@ const PlayerLevel = styled.div`
   font-weight: 700;
   margin-bottom: ${props => `${props.size * 0.66}rem`};
   color: ${props => props.color};
+  text-decoration: underline;
 `;
 
 const PlayerStats = styled.div`
@@ -392,15 +407,14 @@ const PlayerStats = styled.div`
   width: ${props => `${props.size * 15}rem`};
   font-weight: 700;
   border-radius: 2px;
-  height: ${props => `${props.size * 7}rem`};
+  height: ${props => `${props.size * 7.5}rem`};
+  box-shadow: ${props => `0rem -0.15rem 1.4rem ${props.shadow}`};
 `;
 
 const StatsCategory = styled.div`
   padding: ${props =>
-    `${props.size * 0.7}rem ${props.size * 0.7}rem ${props.size *
-      0.7}rem ${props.size * 0.7}rem`};
+    `${props.size * 0.5}rem ${props.size * 0.75}rem ${props.size *
+      0.5}rem ${props.size * 0.75}rem`};
   text-align: center;
-  font-size: ${props => `${props.size * 1.5}rem`};
-  ${'' /* margin-left: ${props => (props.left ? `${0.5 * props.size}rem` : 0)};
-  margin-right: ${props => (props.right ? `${0.5 * props.size}rem` : 0)}; */};
+  font-size: ${props => `${props.size * 1.6}rem`};
 `;

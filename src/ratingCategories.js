@@ -104,3 +104,38 @@ export function getLevelColor(rating) {
   }
   return color;
 }
+
+/**
+ * Gets color for card's level label
+ * @param {number} rating The player's rating
+ * @returns {string} The color for header and footer shadows
+ */
+export function getShadowColor(rating) {
+  let color;
+  switch (true) {
+    case rating > 2700:
+      color = `rgba(138, 110, 47, 0.2)`;
+      break;
+    case rating > 2500:
+      color = 'rgba(142, 45, 226, 0.2)';
+      break;
+    case rating > 2000:
+      color = 'rgba(91, 134, 229, 0.2)';
+      break;
+    case rating > 1800:
+      color = 'rgba(141, 194, 111, 0.2)';
+      break;
+    case rating > 1600:
+      color = 'rgba(203, 45, 62, 0.2)';
+      break;
+    case rating > 1400:
+      color = 'rgba(236, 233, 230, 0.2)';
+      break;
+    case rating > 1200:
+      color = 'grey';
+      break;
+    default:
+      color = 'grey';
+  }
+  return color;
+}

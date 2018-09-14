@@ -7,7 +7,7 @@ import {
   HorizontalGridLines,
   VerticalBarSeries
 } from 'react-vis';
-import '../node_modules/react-vis/dist/style.css';
+import '../../node_modules/react-vis/dist/style.css';
 import format from 'date-fns/format';
 import Proptypes from 'prop-types';
 // import styled from 'styled-components';
@@ -70,7 +70,7 @@ class LineChart extends React.Component {
     return (
       <div>
         <XYPlot
-          margin={{ left: 37, right: 15, top: 20, bottom: 30 }}
+          margin={{ left: 37, right: 20, top: 20, bottom: 35 }}
           xType="ordinal"
           yType="linear"
           width={150}
@@ -80,8 +80,18 @@ class LineChart extends React.Component {
         >
           <VerticalGridLines />
           <HorizontalGridLines />
-          <XAxis tickValues={[startOfHotStreak, currentDate]} />
-          <YAxis tickPadding={0} />
+          <XAxis
+            tickValues={[startOfHotStreak, currentDate]}
+            style={{
+              text: { stroke: 'none', fill: 'black', fontWeight: 400 }
+            }}
+          />
+          <YAxis
+            tickPadding={0}
+            style={{
+              text: { stroke: 'none', fill: 'black', fontWeight: 400 }
+            }}
+          />
           <VerticalBarSeries colorType="literal" data={data} />
         </XYPlot>
       </div>
