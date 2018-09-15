@@ -1,6 +1,11 @@
 import React from 'react';
 import App from '../App';
-import { render, cleanup, waitForElement } from 'react-testing-library';
+import {
+  render,
+  cleanup,
+  waitForElement,
+  fireEvent
+} from 'react-testing-library';
 import 'jest-dom/extend-expect';
 
 import { getPlayer, getRating } from '../api/chess_com';
@@ -56,5 +61,31 @@ describe('mocking api', () => {
     expect(username).toHaveTextContent('realMagnusCarlsen');
     expect(rating).toHaveTextContent('1500');
     expect(title).toHaveTextContent('gm');
+  });
+});
+
+describe('shows and closes cards on button click', () => {
+  fetch.mockResponse(
+    JSON.stringify({
+      avatar: 'avatar',
+      username: 'realMagnusCarlsen',
+      blitzRating: 1500,
+      title: 'gm',
+      plus: 100
+    })
+  );
+
+  it('reveals cards on button click', () => {
+    const { getByText, getByTestId } = render(<App fakeFetch={fetch} />);
+
+    const button = getByText('Hot?', { exact: false });
+    fireEvent.click(getByText('Hot?', { exact: false }));
+
+    // wait for spring animation to translate cards onto screen
+    setTimeout(() => {
+      const settledCard = getByTestId('card-settled');
+      expect(settledCard).toBeInTheDocument();
+      expect(button).toHaveTextContent("Who's Hot");
+    }, 500);
   });
 });

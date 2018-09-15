@@ -4,12 +4,7 @@ import styled from 'styled-components';
 import { Spring } from 'react-spring';
 import Proptypes from 'prop-types';
 
-import {
-  getLevel,
-  getGradient,
-  getLevelColor,
-  getShadowColor
-} from '../ratingCategories';
+import getLevel from '../ratingCategories';
 import LineChart from './LineChart';
 import { getPlayer, getRating } from '../api/chess_com';
 
@@ -106,7 +101,7 @@ class ChessCard extends React.Component {
         to={{ rotateY: !front ? 180 : 360, x: !front ? 180 : 0 }}
       >
         {styles => (
-          <div style={interpolateStyles(styles)}>
+          <div data-testid="card-settled" style={interpolateStyles(styles)}>
             {styles.rotateY >= 270 && (
               <Front
                 flipCard={this.flipCard}
@@ -176,7 +171,8 @@ Front.propTypes = {
   username: Proptypes.string,
   plus: Proptypes.number,
   game: Proptypes.string,
-  size: Proptypes.number
+  size: Proptypes.number,
+  getLevel: Proptypes.func
 };
 
 // eslint-disable-next-line require-jsdoc
@@ -197,25 +193,24 @@ function Front({
       zindex={front ? 2 : 0}
       scale={front.toString()}
       size={size}
-      data-testid={`front-settled`}
     >
       <Header
-        gradient={getGradient(blitzRating)}
+        gradient={getLevel(blitzRating).gradient}
         size={size}
-        shadow={getShadowColor(blitzRating)}
+        shadow={getLevel(blitzRating).shadow}
       >
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
       <CardBody size={size}>
         <PlayerName size={size}>{`${title} ${username}`}</PlayerName>
-        <PlayerLevel size={size} color={getLevelColor(blitzRating)}>
-          {blitzRating && getLevel(blitzRating)}
+        <PlayerLevel size={size} color={getLevel(blitzRating).color}>
+          {blitzRating && getLevel(blitzRating).level}
         </PlayerLevel>
 
         <PlayerStats
-          style={playerStatsStyle(getGradient)(blitzRating)}
+          style={playerStatsStyle(blitzRating)}
           size={size}
-          shadow={getShadowColor(blitzRating)}
+          shadow={getLevel(blitzRating).shadow}
         >
           <StatsCategory size={size} left>
             {getGame(game)}
@@ -248,9 +243,9 @@ function Back({ flipCard, front, blitzRating, avatar, username, size, plus }) {
       size={size}
     >
       <Header
-        gradient={getGradient(blitzRating)}
+        gradient={getLevel(blitzRating).gradient}
         size={size}
-        shadow={getShadowColor(blitzRating)}
+        shadow={getLevel(blitzRating).shadow}
       >
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
@@ -270,13 +265,12 @@ export function getRandomInt(min, max) {
 }
 
 /**
- * Uses partial application to create style object for player stats
- * @param {string} gradient The background gradient returned from getGradient helper
+ * Gets styles for background and level color based on rating
  * @param {number} rating The players rating
  * @returns {Object} The style object for player stats
  */
-const playerStatsStyle = gradient => rating => ({
-  background: gradient(rating),
+const playerStatsStyle = rating => ({
+  background: getLevel(rating).gradient,
   color: rating > 1600 ? 'white' : 'black'
 });
 
@@ -306,7 +300,7 @@ const getGame = game => {
   return gameType;
 };
 
-// CSS
+//////////////////////////////////////////// CSS
 export const StyledPaperFront = styled(Paper)`
   position: absolute;
   width: ${props => `${props.size * 15}rem`};
@@ -352,9 +346,9 @@ export const Header = styled.header`
   height: ${props => `${props.size * 8}rem`};
   position: relative;
   background: ${props => props.gradient};
-  border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 4px 4px;
   transform: scale(0.9);
-  box-shadow: ${props => `0rem 1rem 1.4rem ${props.shadow}`};
+  box-shadow: ${props => `0rem 0.7rem 1.4rem ${props.shadow}`};
 `;
 
 export const Avatar = styled.img`
@@ -362,10 +356,10 @@ export const Avatar = styled.img`
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: ${props => `${props.size * 4}px solid white`};
+  border: ${props => `${props.size * 3}px solid white`};
   border-radius: 50%;
-  width: ${props => `${props.size * 9}rem`};
-  height: ${props => `${props.size * 9}rem`};
+  width: ${props => `${props.size * 9.0}rem`};
+  height: ${props => `${props.size * 9.0}rem`};
   margin: 5;
 `;
 
@@ -406,9 +400,9 @@ const PlayerStats = styled.div`
   align-items: center;
   width: ${props => `${props.size * 15}rem`};
   font-weight: 700;
-  border-radius: 2px;
+  border-radius: 4px 4px 4px 4px;
   height: ${props => `${props.size * 7.5}rem`};
-  box-shadow: ${props => `0rem -0.15rem 1.4rem ${props.shadow}`};
+  box-shadow: ${props => `0rem -0.3rem 1.4rem ${props.shadow}`};
 `;
 
 const StatsCategory = styled.div`

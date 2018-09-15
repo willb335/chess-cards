@@ -1,141 +1,65 @@
 /**
- * Gets label for player's card
+ * Gets styles for player's card based on rating
  * @param {number} rating The player's rating
- * @returns {string} The label to be used on the player's card
+ * @returns {Object} The cards styling properties
  */
-export function getLevel(rating) {
-  let label;
+export default function getLevel(rating) {
   switch (true) {
     case rating > 2700:
-      label = 'Legendary';
-      break;
+      return {
+        level: 'Legendary',
+        gradient: `linear-gradient(to left, #C6920D, #D09D1F)`,
+        color: '#C6920D',
+        shadow: 'rgba(198, 146, 13, 0.24)'
+      };
     case rating > 2500:
-      label = 'Epic';
-      break;
+      return {
+        level: 'Epic',
+        gradient: `linear-gradient(to right, #8e2de2, #4a00e0)`,
+        color: '#8e2de2',
+        shadow: 'rgba(142, 45, 226, 0.24)'
+      };
     case rating > 2000:
-      label = 'Rare';
-      break;
+      return {
+        level: 'Rare',
+        gradient: `linear-gradient(to right, #36d1dc, #5b86e5)`,
+        color: '#5b86e5',
+        shadow: 'rgba(91, 134, 229, 0.24)'
+      };
     case rating > 1800:
-      label = 'Class A';
-      break;
+      return {
+        level: 'Class A',
+        gradient: `linear-gradient(to left, #76b852, #8dc26f)`,
+        color: '#8dc26f',
+        shadow: 'rgba(141, 194, 111, 0.24)'
+      };
     case rating > 1600:
-      label = 'Class B';
-      break;
+      return {
+        level: 'Class B',
+        gradient: `linear-gradient(to left, #cb2d3e, #ef473a)`,
+        color: '#cb2d3e',
+        shadow: 'rgba(203, 45, 62, 0.24)'
+      };
     case rating > 1400:
-      label = 'Class C';
-      break;
+      return {
+        level: 'Class C',
+        gradient: `linear-gradient(to left, #ece9e6, #ffffff)`,
+        color: '#ece9e6',
+        shadow: 'rgba(236, 233, 230, 0.24)'
+      };
     case rating > 1200:
-      label = 'Class D';
-      break;
+      return {
+        level: 'Class D',
+        gradient: `linear-gradient(to left, #ece9e6, #ffffff)`,
+        color: '#ece9e6',
+        shadow: 'rgba(236, 233, 230, 0.24)'
+      };
     default:
-      label = 'Novice';
+      return {
+        level: 'Class D',
+        gradient: `linear-gradient(to left, #ece9e6, #ffffff)`,
+        color: '#ece9e6',
+        shadow: 'rgba(236, 233, 230, 0.24)'
+      };
   }
-  return label;
-}
-
-/**
- * Gets gradient for player's card
- * @param {number} rating The player's rating
- * @returns {string} The background gradient
- */
-export function getGradient(rating) {
-  let gradient;
-  switch (true) {
-    case rating > 2700:
-      gradient = `radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%)`;
-      break;
-    case rating > 2500:
-      gradient = 'linear-gradient(to right, #8e2de2, #4a00e0)';
-      break;
-    case rating > 2000:
-      gradient = 'linear-gradient(to right, #36d1dc, #5b86e5)';
-      break;
-    case rating > 1800:
-      gradient = 'linear-gradient(to left, #76b852, #8dc26f)';
-      break;
-    case rating > 1600:
-      gradient = 'linear-gradient(to left, #cb2d3e, #ef473a)';
-
-      break;
-    case rating > 1400:
-      gradient = 'linear-gradient(to left, #ece9e6, #ffffff)';
-      break;
-    case rating > 1200:
-      gradient = 'Class D';
-      break;
-    default:
-      gradient = 'Novice';
-  }
-  return gradient;
-}
-
-/**
- * Gets color for card's level label
- * @param {number} rating The player's rating
- * @returns {string} The color for card's level label
- */
-export function getLevelColor(rating) {
-  let color;
-  switch (true) {
-    case rating > 2700:
-      color = `#8A6E2F`;
-      break;
-    case rating > 2500:
-      color = '#8e2de2';
-      break;
-    case rating > 2000:
-      color = '#5b86e5';
-      break;
-    case rating > 1800:
-      color = '#8dc26f';
-      break;
-    case rating > 1600:
-      color = '#cb2d3e';
-      break;
-    case rating > 1400:
-      color = '#ece9e6';
-      break;
-    case rating > 1200:
-      color = 'Class D';
-      break;
-    default:
-      color = 'Novice';
-  }
-  return color;
-}
-
-/**
- * Gets color for card's level label
- * @param {number} rating The player's rating
- * @returns {string} The color for header and footer shadows
- */
-export function getShadowColor(rating) {
-  let color;
-  switch (true) {
-    case rating > 2700:
-      color = `rgba(138, 110, 47, 0.2)`;
-      break;
-    case rating > 2500:
-      color = 'rgba(142, 45, 226, 0.2)';
-      break;
-    case rating > 2000:
-      color = 'rgba(91, 134, 229, 0.2)';
-      break;
-    case rating > 1800:
-      color = 'rgba(141, 194, 111, 0.2)';
-      break;
-    case rating > 1600:
-      color = 'rgba(203, 45, 62, 0.2)';
-      break;
-    case rating > 1400:
-      color = 'rgba(236, 233, 230, 0.2)';
-      break;
-    case rating > 1200:
-      color = 'grey';
-      break;
-    default:
-      color = 'grey';
-  }
-  return color;
 }

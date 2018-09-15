@@ -4,12 +4,7 @@ import { Spring, config } from 'react-spring';
 import styled from 'styled-components';
 import Proptypes from 'prop-types';
 
-import ChessCard, {
-  StyledPaperFront,
-  Header,
-  Avatar
-} from './components/ChessCard';
-import chessComAvatar from './images/chesscom.png';
+import ChessCard, { StyledPaperFront } from './components/ChessCard';
 
 const SIZE = 1;
 
@@ -89,16 +84,7 @@ class App extends React.Component {
             onClick={cardsLoaded ? this.handleShowCardsClick : () => {}}
             size={1}
           >
-            <Header
-              gradient={`linear-gradient(to bottom, #8e9eab, #eef2f3)`}
-              size={1}
-            >
-              <StyledAvatar src={chessComAvatar} alt="chess.com" size={1} />
-            </Header>
-            <div style={{ margin: '4rem 0 1rem 0' }}>Who&apos;s Hot?</div>
-            {/* <span aria-label="Who's Hot" role="img">
-              🔥🔥🔥🔥🔥🔥
-            </span> */}
+            <div>Who&apos;s Hot?</div>
           </Button>
           <Github />
         </Container>
@@ -193,10 +179,6 @@ const Container = styled.div`
   margin: 3rem;
 `;
 
-const StyledAvatar = styled(Avatar)`
-  border: 0px solid white;
-`;
-
 const Button = styled(StyledPaperFront)`
   z-index: 1;
   background: linear-gradient(to left, #f12711, #f5af19);
@@ -204,6 +186,9 @@ const Button = styled(StyledPaperFront)`
   color: white;
   font-size: 2rem;
   cursor: pointer !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LinkContainer = styled.div`
