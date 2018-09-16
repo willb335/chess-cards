@@ -10,7 +10,6 @@ import {
 import '../../node_modules/react-vis/dist/style.css';
 import format from 'date-fns/format';
 import Proptypes from 'prop-types';
-// import styled from 'styled-components';
 
 import { getRandomInt } from './ChessCard';
 

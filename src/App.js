@@ -74,6 +74,7 @@ class App extends React.Component {
                       showCards={showCards}
                       size={SIZE}
                       fakeFetch={this.props.fakeFetch}
+                      cardNumber={i}
                     />
                   </div>
                 )}

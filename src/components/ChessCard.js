@@ -16,7 +16,8 @@ class ChessCard extends React.Component {
     game: Proptypes.string,
     animationSettled: Proptypes.bool,
     size: Proptypes.number,
-    fakeFetch: Proptypes.func
+    fakeFetch: Proptypes.func,
+    cardNumber: Proptypes.number
   };
 
   static defaultProps = { size: 1 };
@@ -93,39 +94,43 @@ class ChessCard extends React.Component {
   // eslint-disable-next-line require-jsdoc
   render() {
     const { title, username, blitzRating, avatar, plus, front } = this.state;
-    const { animationSettled, game, size } = this.props;
+    const { animationSettled, game, size, cardNumber } = this.props;
 
     return animationSettled ? (
       <Spring
-        config={{ tension: 125, friction: 14 }}
+        config={{ tension: 280, friction: 60 }}
         to={{ rotateY: !front ? 180 : 360, x: !front ? 180 : 0 }}
       >
         {styles => (
-          <div data-testid="card-settled" style={interpolateStyles(styles)}>
-            {styles.rotateY >= 270 && (
-              <Front
-                flipCard={this.flipCard}
-                front={front}
-                blitzRating={blitzRating}
-                avatar={avatar}
-                title={title}
-                username={username}
-                plus={plus}
-                game={game}
-                size={size}
-              />
-            )}
-            {styles.rotateY < 270 && (
-              <Back
-                flipCard={this.flipCard}
-                front={front}
-                blitzRating={blitzRating}
-                avatar={avatar}
-                username={username}
-                size={size}
-                plus={plus}
-              />
-            )}
+          <div style={interpolateStyles(styles)}>
+            {styles.rotateY >= 270 &&
+              styles.x < 90 && (
+                <Front
+                  flipCard={this.flipCard}
+                  front={front}
+                  blitzRating={blitzRating}
+                  avatar={avatar}
+                  title={title}
+                  username={username}
+                  plus={plus}
+                  game={game}
+                  size={size}
+                  dataId={`front-${cardNumber}`}
+                />
+              )}
+            {styles.rotateY < 270 &&
+              styles.x > 90 && (
+                <Back
+                  flipCard={this.flipCard}
+                  front={front}
+                  blitzRating={blitzRating}
+                  avatar={avatar}
+                  username={username}
+                  size={size}
+                  plus={plus}
+                  dataId={`back-${cardNumber}`}
+                />
+              )}
           </div>
         )}
       </Spring>
@@ -142,6 +147,7 @@ class ChessCard extends React.Component {
             plus={plus}
             game={game}
             size={size}
+            // dataId={'front'}
           />
         )}
         {!front && (
@@ -153,6 +159,7 @@ class ChessCard extends React.Component {
             username={username}
             size={size}
             plus={plus}
+            // dataId={'back'}
           />
         )}
       </div>
@@ -172,7 +179,8 @@ Front.propTypes = {
   plus: Proptypes.number,
   game: Proptypes.string,
   size: Proptypes.number,
-  getLevel: Proptypes.func
+  getLevel: Proptypes.func,
+  dataId: Proptypes.string
 };
 
 // eslint-disable-next-line require-jsdoc
@@ -185,15 +193,11 @@ function Front({
   username,
   plus,
   game,
-  size
+  size,
+  dataId
 }) {
   return (
-    <StyledPaperFront
-      onClick={flipCard}
-      zindex={front ? 2 : 0}
-      scale={front.toString()}
-      size={size}
-    >
+    <StyledPaperFront onClick={flipCard} zindex={front ? 2 : 0} size={size}>
       <Header
         gradient={getLevel(blitzRating).gradient}
         size={size}
@@ -201,7 +205,7 @@ function Front({
       >
         <Avatar src={avatar} alt={`${username}`} size={size} />
       </Header>
-      <CardBody size={size}>
+      <CardBody data-testid={dataId} size={size}>
         <PlayerName size={size}>{`${title} ${username}`}</PlayerName>
         <PlayerLevel size={size} color={getLevel(blitzRating).color}>
           {blitzRating && getLevel(blitzRating).level}
@@ -230,19 +234,25 @@ Back.propTypes = {
   avatar: Proptypes.string,
   username: Proptypes.string,
   size: Proptypes.number,
-  plus: Proptypes.number
+  plus: Proptypes.number,
+  dataId: Proptypes.string
 };
 
 // eslint-disable-next-line require-jsdoc
-function Back({ flipCard, front, blitzRating, avatar, username, size, plus }) {
+function Back({
+  flipCard,
+  front,
+  blitzRating,
+  avatar,
+  username,
+  size,
+  plus,
+  dataId
+}) {
   return (
-    <StyledPaperBack
-      onClick={flipCard}
-      scale={front.toString()}
-      zindex={front ? 0 : 2}
-      size={size}
-    >
+    <StyledPaperBack onClick={flipCard} zindex={front ? 0 : 2} size={size}>
       <Header
+        data-testid={dataId}
         gradient={getLevel(blitzRating).gradient}
         size={size}
         shadow={getLevel(blitzRating).shadow}
@@ -320,10 +330,10 @@ export const StyledPaperFront = styled(Paper)`
   z-index: ${props => props.zindex};
   cursor: pointer !important;
 
-  &:hover {
+  ${'' /* &:hover {
     transform: scale(1);
     box-shadow: 0.5rem 2rem 3rem rgba(0, 0, 0, 0.2);
-  }
+  } */};
 `;
 
 const StyledPaperBack = styled(StyledPaperFront)`
@@ -332,11 +342,11 @@ const StyledPaperBack = styled(StyledPaperFront)`
   transition: box-shadow 0.5s, transform 0.5s;
   backface-visibility: visible;
 
-  &:hover {
+  ${'' /* &:hover {
     transform: scale(1) rotateY(3.142rad);
     transition: box-shadow 0.5s, transform 0.5s;
     box-shadow: 0.5rem 2rem 3rem rgba(0, 0, 0, 0.2);
-  }
+  } */};
 `;
 
 export const Header = styled.header`
@@ -348,7 +358,7 @@ export const Header = styled.header`
   background: ${props => props.gradient};
   border-radius: 4px 4px 4px 4px;
   transform: scale(0.9);
-  box-shadow: ${props => `0rem 0.7rem 1.4rem ${props.shadow}`};
+  box-shadow: ${props => `0rem 0.2rem 0.35rem ${props.shadow}`};
 `;
 
 export const Avatar = styled.img`
@@ -373,9 +383,9 @@ const CardBody = styled.div`
   transform: scale(0.9);
   transition: transform 0.5s;
 
-  ${StyledPaperFront}:hover {
+  ${'' /* ${StyledPaperFront}:hover {
     transform: scale(1);
-  }
+  } */};
 `;
 
 const PlayerName = styled.div`
@@ -402,7 +412,7 @@ const PlayerStats = styled.div`
   font-weight: 700;
   border-radius: 4px 4px 4px 4px;
   height: ${props => `${props.size * 7.5}rem`};
-  box-shadow: ${props => `0rem -0.3rem 1.4rem ${props.shadow}`};
+  box-shadow: ${props => `0rem 0.1rem 0.35rem ${props.shadow}`};
 `;
 
 const StatsCategory = styled.div`

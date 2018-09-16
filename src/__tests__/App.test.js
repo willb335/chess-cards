@@ -75,17 +75,55 @@ describe('shows and closes cards on button click', () => {
     })
   );
 
-  it('reveals cards on button click', () => {
+  it('reveals cards on button click', async () => {
     const { getByText, getByTestId } = render(<App fakeFetch={fetch} />);
 
-    const button = getByText('Hot?', { exact: false });
-    fireEvent.click(getByText('Hot?', { exact: false }));
+    const button = await waitForElement(() =>
+      getByText('Hot?', { exact: false })
+    );
 
-    // wait for spring animation to translate cards onto screen
-    setTimeout(() => {
-      const settledCard = getByTestId('card-settled');
-      expect(settledCard).toBeInTheDocument();
-      expect(button).toHaveTextContent("Who's Hot");
-    }, 500);
+    await setTimeout(() => {}, 1000);
+
+    fireEvent.click(button);
+
+    await setTimeout(() => {}, 1000);
+
+    const front1 = await waitForElement(() => getByTestId('front-0'));
+    const card1 = document.querySelector('[data-testid="front-0"]');
+    const card4 = document.querySelector('[data-testid="front-3"]');
+    const card1Back = document.querySelector('[data-testid="back-0"]');
+
+    expect(button).toBeInTheDocument();
+    expect(front1).toBeInTheDocument();
+    expect(card1).toBeInTheDocument();
+    expect(card4).toBeInTheDocument();
+    expect(card1Back).not.toBeInTheDocument();
+  });
+
+  it('reveals back on card click', async () => {
+    const { getByText, getByTestId } = render(<App fakeFetch={fetch} />);
+
+    const button = await waitForElement(() =>
+      getByText('Hot?', { exact: false })
+    );
+
+    await setTimeout(() => {}, 1000);
+
+    fireEvent.click(button);
+
+    await setTimeout(() => {}, 1500);
+
+    const front2 = await waitForElement(() => getByTestId('front-1'));
+
+    fireEvent.click(front2);
+
+    await setTimeout(() => {}, 1500);
+
+    await waitForElement(() => getByTestId('back-1'));
+    const card2Back = document.querySelector('[data-testid="back-1"]');
+    const card5Back = document.querySelector('[data-testid="back-4"]');
+
+    expect(card2Back).toBeInTheDocument();
+    expect(card5Back).not.toBeInTheDocument();
   });
 });
