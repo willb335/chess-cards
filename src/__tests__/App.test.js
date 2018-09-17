@@ -114,6 +114,12 @@ describe('shows cards, closes cards on button click and flips cards on card clic
   it.only('reveals back on front of card click and then front on back of card click and then hides cards and finally reshows cards', async () => {
     const { getByText, getByTestId } = render(<App fakeFetch={fetch} />);
 
+    let card2Back;
+    let card5Back;
+    let card2Front;
+    let card5Front;
+    let card6Back;
+
     const button = await waitForElement(() =>
       getByText('Hot?', { exact: false })
     );
@@ -132,11 +138,13 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     fireEvent.click(front2);
     fireEvent.click(front5);
 
-    await setTimeout(() => {}, 1000);
+    await setTimeout(() => {}, 2000);
 
     const card2 = await waitForElement(() => getByTestId('back-1'));
-    const card2Back = document.querySelector('[data-testid="back-1"]');
-    const card5Back = document.querySelector('[data-testid="back-4"]');
+    await waitForElement(() => getByTestId('back-4'));
+
+    card2Back = document.querySelector('[data-testid="back-1"]');
+    card5Back = document.querySelector('[data-testid="back-4"]');
 
     expect(card2Back).toBeInTheDocument();
     expect(card5Back).toBeInTheDocument();
@@ -148,7 +156,9 @@ describe('shows cards, closes cards on button click and flips cards on card clic
 
     await waitForElement(() => getByTestId('front-1'));
 
-    const card2Front = document.querySelector('[data-testid="front-1"]');
+    card2Back = document.querySelector('[data-testid="back-1"]');
+    card5Back = document.querySelector('[data-testid="back-4"]');
+    card2Front = document.querySelector('[data-testid="front-1"]');
 
     expect(card2Back).not.toBeInTheDocument();
     expect(card5Back).toBeInTheDocument();
@@ -157,25 +167,32 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     //hide cards
     fireEvent.click(button);
 
-    await setTimeout(() => {}, 1000);
+    await setTimeout(() => {}, 2000);
+
+    card2Back = document.querySelector('[data-testid="back-1"]');
+    card5Back = document.querySelector('[data-testid="back-4"]');
+    card2Front = document.querySelector('[data-testid="front-1"]');
 
     expect(card2Back).not.toBeInTheDocument();
     expect(card2Front).not.toBeInTheDocument();
+    expect(card5Back).not.toBeInTheDocument();
 
     // show cards and
     fireEvent.click(button);
 
-    await setTimeout(() => {}, 1000);
+    await setTimeout(() => {}, 2000);
 
-    const front2Again = await waitForElement(() => getByTestId('front-1'));
-    const back5Again = await waitForElement(() => getByTestId('back-4'));
+    await waitForElement(() => getByTestId('front-1'));
 
-    const card2FrontAgain = document.querySelector('[data-testid="front-1"]');
-    const card5BackAgain = document.querySelector('[data-testid="back-4"]');
+    card2Back = document.querySelector('[data-testid="back-1"]');
+    card5Back = document.querySelector('[data-testid="back-4"]');
+    card2Front = document.querySelector('[data-testid="front-1"]');
+    card5Front = document.querySelector('[data-testid="front-4"]');
+    card6Back = document.querySelector('[data-testid="back-5"]');
 
-    expect(back5Again).toBeInTheDocument();
-    expect(front2Again).toBeInTheDocument();
-    expect(card2FrontAgain).toBeInTheDocument();
-    expect(card5BackAgain).not.toBeInTheDocument();
+    expect(card2Front).toBeInTheDocument();
+    expect(card2Back).not.toBeInTheDocument();
+    expect(card6Back).not.toBeInTheDocument();
+    expect(card5Back).toBeInTheDocument();
   });
 });

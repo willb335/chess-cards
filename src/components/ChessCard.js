@@ -196,6 +196,8 @@ function Front({
   size,
   dataId
 }) {
+  if (dataId === `front-4`) console.log(dataId);
+
   return (
     <StyledPaperFront onClick={flipCard} zindex={front ? 2 : 0} size={size}>
       <Header
