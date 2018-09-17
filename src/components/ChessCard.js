@@ -98,7 +98,7 @@ class ChessCard extends React.Component {
 
     return animationSettled ? (
       <Spring
-        config={{ tension: 280, friction: 60 }}
+        config={{ tension: 180, friction: 27 }}
         to={{ rotateY: !front ? 180 : 360, x: !front ? 180 : 0 }}
       >
         {styles => (
