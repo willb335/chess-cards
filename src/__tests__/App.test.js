@@ -111,7 +111,7 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     expect(card1Back).not.toBeInTheDocument();
   });
 
-  it.only('reveals back on front of card click and then front on back of card click and then hides cards and finally reshows cards', async () => {
+  it('reveals back on front of card click and then front on back of card click and then hides cards and finally reshows cards', async () => {
     const { getByText, getByTestId } = render(<App fakeFetch={fetch} />);
 
     let card2Back;
@@ -138,7 +138,7 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     fireEvent.click(front2);
     fireEvent.click(front5);
 
-    await setTimeout(() => {}, 2000);
+    await setTimeout(() => {}, 1500);
 
     const card2 = await waitForElement(() => getByTestId('back-1'));
     await waitForElement(() => getByTestId('back-4'));
@@ -167,7 +167,7 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     //hide cards
     fireEvent.click(button);
 
-    await setTimeout(() => {}, 2000);
+    await setTimeout(() => {}, 1500);
 
     card2Back = document.querySelector('[data-testid="back-1"]');
     card5Back = document.querySelector('[data-testid="back-4"]');
@@ -180,7 +180,7 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     // show cards and
     fireEvent.click(button);
 
-    await setTimeout(() => {}, 2000);
+    await setTimeout(() => {}, 1500);
 
     await waitForElement(() => getByTestId('front-1'));
 
