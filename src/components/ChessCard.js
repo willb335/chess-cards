@@ -249,6 +249,7 @@ function Back({
   plus,
   dataId
 }) {
+  console.log(dataId);
   return (
     <StyledPaperBack onClick={flipCard} zindex={front ? 0 : 2} size={size}>
       <Header

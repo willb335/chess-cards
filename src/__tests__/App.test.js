@@ -168,9 +168,12 @@ describe('shows cards, closes cards on button click and flips cards on card clic
     await setTimeout(() => {}, 1000);
 
     const front2Again = await waitForElement(() => getByTestId('front-1'));
+    const back5Again = await waitForElement(() => getByTestId('back-4'));
+
     const card2FrontAgain = document.querySelector('[data-testid="front-1"]');
     const card5BackAgain = document.querySelector('[data-testid="back-4"]');
 
+    expect(back5Again).toBeInTheDocument();
     expect(front2Again).toBeInTheDocument();
     expect(card2FrontAgain).toBeInTheDocument();
     expect(card5BackAgain).not.toBeInTheDocument();
