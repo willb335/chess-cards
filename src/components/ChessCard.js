@@ -147,7 +147,6 @@ class ChessCard extends React.Component {
             plus={plus}
             game={game}
             size={size}
-            // dataId={'front'}
           />
         )}
         {!front && (
@@ -159,7 +158,6 @@ class ChessCard extends React.Component {
             username={username}
             size={size}
             plus={plus}
-            // dataId={'back'}
           />
         )}
       </div>
@@ -196,8 +194,6 @@ function Front({
   size,
   dataId
 }) {
-  if (dataId === `front-4`) console.log(dataId);
-
   return (
     <StyledPaperFront onClick={flipCard} zindex={front ? 2 : 0} size={size}>
       <Header
@@ -251,7 +247,6 @@ function Back({
   plus,
   dataId
 }) {
-  console.log(dataId);
   return (
     <StyledPaperBack onClick={flipCard} zindex={front ? 0 : 2} size={size}>
       <Header
