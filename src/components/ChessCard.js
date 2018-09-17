@@ -147,7 +147,6 @@ class ChessCard extends React.Component {
             plus={plus}
             game={game}
             size={size}
-            // dataId={'front'}
           />
         )}
         {!front && (
@@ -159,7 +158,6 @@ class ChessCard extends React.Component {
             username={username}
             size={size}
             plus={plus}
-            // dataId={'back'}
           />
         )}
       </div>
