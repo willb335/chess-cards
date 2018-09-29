@@ -138,9 +138,9 @@ const getXCoordinates = (showCards, index) => {
  */
 const getYCoordinates = (showCards, index) => {
   if (index < 3) {
-    return showCards ? -500 : 75;
+    return showCards ? -250 : 75;
   }
-  return showCards ? -250 : 75;
+  return showCards ? -0 : 75;
 };
 
 /**
